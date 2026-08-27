@@ -776,15 +776,35 @@
     vertical-align:middle;
   }
   /* ===== Diagram (Mermaid flowchart) ===== */
+  .diagram-toggle-btn{
+    display:inline-flex;
+    align-items:center;
+    gap:9px;
+    background:var(--ink);
+    color:#fff;
+    border:none;
+    font-family:'Sora',sans-serif;
+    font-weight:700;
+    font-size:13.5px;
+    padding:11px 20px;
+    border-radius:9px;
+    cursor:pointer;
+    margin:6px 0 10px;
+    transition:background .15s ease;
+  }
+  .diagram-toggle-btn svg{width:16px;height:16px;flex:none;}
+  .diagram-toggle-btn:hover{background:var(--red-deep);}
+  .diagram-toggle-btn.active{background:var(--red);}
   .diagram-wrap{
     background:var(--white);
     border:1px solid var(--line);
     border-radius:14px;
     padding:20px;
-    margin:18px 0 10px;
+    margin:8px 0 10px;
     overflow-x:auto;
     box-shadow:0 6px 18px rgba(24,21,21,0.05);
   }
+  .diagram-wrap.collapsed{display:none;}
   .diagram-wrap .mermaid{display:flex; justify-content:center;}
 </style>
 </head>
@@ -854,7 +874,11 @@
         <div class="kicker"><span class="chip">◆</span><span class="line"></span></div>
         <h2 class="h-title">Fluxograma Completo do Processo</h2>
         <p>Visão única do processo de vagas da Umanse — cobrindo os dois produtos (Vaga Avulsa e Pacote de Vagas), o funil de recrutamento compartilhado, os pontos de decisão do gestor, indicação, cancelamento, garantia e comissionamento. Este fluxograma é o mesmo independentemente da aba selecionada.</p>
-        <div class="diagram-wrap">
+        <button type="button" class="diagram-toggle-btn" onclick="toggleDiagram(this)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8Z"/><circle cx="12" cy="12" r="3"/></svg>
+          <span>Visualizar fluxograma</span>
+        </button>
+        <div class="diagram-wrap collapsed">
           <pre class="mermaid">
 flowchart TD
 
@@ -1348,6 +1372,15 @@ flowchart TD
   window.openProduct = openProduct;
 </script>
 
+<script>
+  function toggleDiagram(btn){
+    var wrap = btn.nextElementSibling;
+    var willShow = wrap.classList.contains('collapsed');
+    wrap.classList.toggle('collapsed');
+    btn.classList.toggle('active', willShow);
+    btn.querySelector('span').textContent = willShow ? 'Ocultar fluxograma' : 'Visualizar fluxograma';
+  }
+</script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/mermaid/10.9.0/mermaid.min.js"></script>
 <script>
   mermaid.initialize({
