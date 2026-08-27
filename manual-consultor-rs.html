@@ -1299,12 +1299,19 @@ flowchart TD
     wrap.classList.toggle('collapsed');
     btn.classList.toggle('active', willShow);
     btn.querySelector('span').textContent = willShow ? 'Ocultar fluxograma' : 'Visualizar fluxograma';
+    if (willShow && !wrap.dataset.rendered) {
+      wrap.dataset.rendered = '1';
+      var el = wrap.querySelector('.mermaid');
+      if (window.mermaid && el) {
+        mermaid.run({ nodes: [el] });
+      }
+    }
   }
 </script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/mermaid/10.9.0/mermaid.min.js"></script>
 <script>
   mermaid.initialize({
-    startOnLoad: true,
+    startOnLoad: false,
     securityLevel: 'loose',
     theme: 'base',
     themeVariables: {
