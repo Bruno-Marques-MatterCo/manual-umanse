@@ -608,6 +608,17 @@
     .content{padding:36px 22px 90px;}
     footer{padding:30px 22px 40px;}
   }
+  /* ===== Diagram (Mermaid flowchart) ===== */
+  .diagram-wrap{
+    background:var(--white);
+    border:1px solid var(--line);
+    border-radius:14px;
+    padding:20px;
+    margin:18px 0 10px;
+    overflow-x:auto;
+    box-shadow:0 6px 18px rgba(24,21,21,0.05);
+  }
+  .diagram-wrap .mermaid{display:flex; justify-content:center;}
 </style>
 </head>
 <body>
@@ -678,6 +689,81 @@
           <div class="flow-step"><span class="flow-num">8</span><span class="flow-label">Busca de indicações</span></div>
           <div class="flow-step"><span class="flow-num">9</span><span class="flow-label">Entrevista — cliente</span></div>
           <div class="flow-step"><span class="flow-num">10</span><span class="flow-label">Feedback</span></div>
+        </div>
+
+        <h3 class="h-sub">1.3 Fluxograma completo do processo</h3>
+        <p>Visão completa do processo de vagas da Umanse — do fechamento comercial (Vaga Avulsa ou Pacote de Vagas) até o comissionamento do consultor, incluindo os pontos de decisão do gestor, indicação, cancelamento e garantia.</p>
+        <div class="diagram-wrap">
+          <pre class="mermaid">
+flowchart TD
+
+    A["Comercial envia proposta ao cliente"] --> B{"Qual produto?"}
+    B -->|"Vaga Avulsa"| C1["Cliente aceita por e-mail<br/>sem contrato formal"]
+    B -->|"Pacote de Vagas"| C2["Cliente assina contrato formal<br/>crédito de vagas com desconto"]
+
+    C1 --> D["Comercial envia formulário de preenchimento da vaga"]
+    C2 --> D
+    D --> E["Cliente preenche o formulário"]
+    E --> F["Financeiro fatura os 50% de entrada"]
+    F --> G["Consultor inicia o processo seletivo"]
+
+    subgraph FUNIL["Funil de Recrutamento e Seleção"]
+        direction TB
+        G --> H["Kickoff / Briefing da vaga"]
+        H --> I["Divulgação da vaga"]
+        I --> J["Triagem e ranking de currículos"]
+        J --> K["Testes de lógica e português<br/>eliminatórios · nota mínima 6 a 9"]
+        K --> L["Testes comportamentais<br/>DISC / MBTI / MAPPER · não eliminatórios"]
+        L --> M["Entrevista com a Umanse"]
+        M --> N["Relatório e parecer ao gestor<br/>3 candidatos aprovados"]
+    end
+
+    N --> O{"Gestor decide"}
+    O -->|"Reprova os 3 candidatos"| P["Reinicia processo<br/>sem novo custo"]
+    P -.-> I
+    O -->|"Indicação própria do gestor"| Q["Candidato indicado pelo gestor vence o processo"]
+    O -->|"Aprova candidato do pipeline"| R["Carta proposta enviada ao candidato"]
+
+    R --> S["Aceite do candidato"]
+    S --> T["Contratação — feita pela equipe do cliente"]
+
+    T --> U["Cobra os 50% finais<br/>recalculado se o salário final divergir do estimado"]
+    U --> W["Comissão do consultor"]
+
+    Q --> V["Cobra apenas os 50% de abertura<br/>sem cobrança dos 50% finais"]
+    V --> W
+
+    T --> X{"Garantia de 60 dias"}
+    X -->|"Gestor mantém o candidato"| Y["Processo encerrado"]
+    X -->|"Gestor decide trocar<br/>dentro do prazo"| P
+
+    D -.-> Z{"Cliente cancela<br/>antes da contratação?"}
+    Z -->|"Até 7 dias /<br/>antes de receber candidatos"| Z1["Devolve 50% de abertura ao cliente"]
+    Z -->|"Após 7 dias /<br/>candidatos já recebidos"| Z2["Retém os 50%, sem devolução"]
+    Z1 --> Z3["Reabertura da vaga paga<br/>o processo do zero"]
+    Z2 --> Z3
+
+    W --> AA{"Comissionamento"}
+    AA -->|"Vaga Avulsa"| AB["% do consultor × (valor cobrado do cliente − alíquota)"]
+    AA -->|"Pacote de Vagas"| AC["% do consultor × (valor líquido já descontado − alíquota)"]
+    AB --> AD["Alíquota de imposto da Umanse<br/>variável mensal · igual para CLT e PJ"]
+    AC --> AD
+
+    classDef comercial fill:#181515,color:#EDEAE6,stroke:#FDBB11,stroke-width:1.5px;
+    classDef funil fill:#FFFFFF,color:#181515,stroke:#D81E3A,stroke-width:1px;
+    classDef decisao fill:#D81E3A,color:#FFFFFF,stroke:#181515,stroke-width:1.5px;
+    classDef final fill:#FDBB11,color:#181515,stroke:#181515,stroke-width:1.5px;
+    classDef cancelamento fill:#FFF3D2,color:#181515,stroke:#F3D493,stroke-width:1px;
+    classDef encerrado fill:#F1EDE6,color:#8b8480,stroke:#E4DED3,stroke-width:1px;
+
+    class A,C1,C2,D,E,F,G comercial;
+    class H,I,J,K,L,M,N funil;
+    class B,O,X,Z,AA decisao;
+    class P,Q,R,S,T,U,V funil;
+    class Z1,Z2,Z3 cancelamento;
+    class W,AB,AC,AD final;
+    class Y encerrado;
+          </pre>
         </div>
       </section>
 
@@ -1179,6 +1265,23 @@
       document.getElementById('modelos').scrollIntoView({behavior:'smooth', block:'start'});
       history.replaceState(null, '', '#modelos');
     });
+  });
+</script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mermaid/10.9.0/mermaid.min.js"></script>
+<script>
+  mermaid.initialize({
+    startOnLoad: true,
+    securityLevel: 'loose',
+    theme: 'base',
+    themeVariables: {
+      primaryColor: '#FAF8F5',
+      primaryTextColor: '#181515',
+      primaryBorderColor: '#D81E3A',
+      lineColor: '#8b8480',
+      fontSize: '15px'
+    },
+    flowchart: { curve: 'basis', htmlLabels: true }
   });
 </script>
 
